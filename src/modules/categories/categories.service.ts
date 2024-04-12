@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Model, Types } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { Category } from './category.schema';
 
 @Injectable()
 export class CategoriesService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
+  ) {}
+
+  async getCategoryById(categoryId: Types.ObjectId) {
+    const category = await this.categoryModel.findById(categoryId);
+    if (!category) {
+      const err = new Error('Category not found.');
+      throw err;
+    }
+    return category;
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async getAllCategories() {
+    return this.categoryModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async createCategory(createCategoryDto: CreateCategoryDto) {
+    const category = new this.categoryModel(createCategoryDto);
+    return category.save();
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async updateCategory(
+    categoryId: Types.ObjectId,
+    updateCategoryDto: UpdateCategoryDto,
+  ) {
+    await this.getCategoryById(categoryId);
+    return this.categoryModel.updateOne(
+      { categoryId },
+      { $set: updateCategoryDto },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async deleteCategory(categoryId: Types.ObjectId) {
+    await this.getCategoryById(categoryId);
+    await this.categoryModel.deleteOne({ _id: categoryId });
+  }
+
+  async countCategories() {
+    return this.categoryModel.countDocuments();
+  }
+
+  async getAllCategoriesAdmin(page: number, limit: number) {
+    return this.categoryModel
+      .find()
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
   }
 }

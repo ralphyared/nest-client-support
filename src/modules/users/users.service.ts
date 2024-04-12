@@ -63,7 +63,6 @@ export class UsersService {
     }
     const newhashedPw = await hash(newPassword, 12);
     user.password = newhashedPw;
-    await user.save();
-    return;
+    return user.save();
   }
 }
