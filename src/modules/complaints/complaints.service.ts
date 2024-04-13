@@ -11,8 +11,14 @@ export class ComplaintsService {
     @InjectModel(Complaint.name) private complaintModel: Model<Complaint>,
   ) {}
 
-  async submitComplaint(CreateComplaintDto: CreateComplaintDto) {
-    const complaint = new this.complaintModel(CreateComplaintDto);
+  async submitComplaint(
+    CreateComplaintDto: CreateComplaintDto,
+    createdBy: Types.ObjectId,
+  ) {
+    const complaint = new this.complaintModel({
+      ...CreateComplaintDto,
+      createdBy,
+    });
     await complaint.save();
     return complaint._id;
   }

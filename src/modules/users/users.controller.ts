@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Req,
-} from '@nestjs/common';
+import { Controller, Post, Body, Patch, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Public } from 'src/global/custom-decorators';
 
 @Controller('users')
 export class UsersController {
@@ -24,13 +16,24 @@ export class UsersController {
     return this.usersService.changePassword(ChangePasswordDto, userId);
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.usersService.findOne(+id);
-  // }
+  @Public()
+  @Post('/forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    const verifToken = await this.usersService.forgotPassword(email);
+    return verifToken;
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
+  @Public()
+  @Post('/forgot-password-resend')
+  async forgotPasswordResend(@Body('verifToken') verifToken: string) {
+    return this.usersService.forgotPasswordResend(verifToken);
+  }
+
+  @Public()
+  @Post('/reset-password')
+  async resetPassword(@Body() body: any) {
+    const { verifToken, enteredOtp, newPassword } = body;
+    await this.usersService.forgotPasswordVerifyOtp(verifToken, enteredOtp);
+    await this.usersService.resetPassword(verifToken, newPassword);
+  }
 }

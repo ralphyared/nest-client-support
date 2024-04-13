@@ -3,14 +3,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { User, UserSchema } from './user.schema';
-import { JwtModule } from '@nestjs/jwt';
+import { OtpService } from './otp.service';
+import { Otp, OtpSchema } from './otp.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Otp.name, schema: OtpSchema }]),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService],
+  providers: [UsersService, OtpService],
+  exports: [UsersService, OtpService],
 })
 export class UsersModule {}

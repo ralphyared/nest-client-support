@@ -6,37 +6,57 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { Types } from 'mongoose';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  // @Post()
-  // create(@Body() createCategoryDto: CreateCategoryDto) {
-  //   return this.categoriesService.create(createCategoryDto);
-  // }
+  @Post()
+  async create(@Body() createCategoryDto: CreateCategoryDto) {
+    return this.categoriesService.createCategory(createCategoryDto);
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.categoriesService.findAll();
-  // }
+  @Get()
+  async findAll() {
+    return this.categoriesService.getAllCategories();
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.categoriesService.findOne(+id);
-  // }
+  @Get('/all')
+  async getAll(@Query() query: any) {
+    const { limit, page } = query;
+    const categoryList = await this.categoriesService.getAllCategoriesAdmin(
+      +page,
+      +limit,
+    );
+    const count = await this.categoriesService.countCategories();
+    const totalPages = Math.ceil(count / +limit);
+    return {
+      categoryList,
+      totalPages,
+    };
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-  //   return this.categoriesService.update(+id, updateCategoryDto);
-  // }
+  @Get(':id')
+  async findOne(@Param('id') id: Types.ObjectId) {
+    return this.categoriesService.getCategoryById(id);
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.categoriesService.remove(+id);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: Types.ObjectId,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+  ) {
+    return this.categoriesService.updateCategory(id, updateCategoryDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: Types.ObjectId) {
+    return this.categoriesService.deleteCategory(id);
+  }
 }

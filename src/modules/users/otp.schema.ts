@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import { User } from './user.schema';
 
-export type TokenDocument = HydratedDocument<Token>;
+export type OtpDocument = HydratedDocument<Otp>;
 
 @Schema({ timestamps: true })
-export class Token {
+export class Otp {
   @Prop()
   otp: number;
 
@@ -16,4 +16,4 @@ export class Token {
   userId: User;
 }
 
-export const TokenSchema = SchemaFactory.createForClass(Token);
+export const OtpSchema = SchemaFactory.createForClass(Otp);

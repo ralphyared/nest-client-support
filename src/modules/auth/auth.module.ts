@@ -5,16 +5,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { AuthGuard } from './auth.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    UsersModule,
     JwtModule.register({
       global: true,
       secret: `${process.env.JWT_SECRET}`,
       signOptions: { expiresIn: 900 },
     }),
-    UsersModule,
   ],
   controllers: [AuthController],
   providers: [

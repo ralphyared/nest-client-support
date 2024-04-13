@@ -35,8 +35,13 @@ export class CategoriesService {
   ) {
     await this.getCategoryById(categoryId);
     return this.categoryModel.updateOne(
-      { categoryId },
-      { $set: updateCategoryDto },
+      { _id: categoryId },
+      {
+        $set: {
+          description: updateCategoryDto.description,
+          title: updateCategoryDto.title,
+        },
+      },
     );
   }
 
