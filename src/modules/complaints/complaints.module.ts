@@ -3,12 +3,14 @@ import { ComplaintsService } from './complaints.service';
 import { ComplaintsController } from './complaints.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Complaint, ComplaintSchema } from './complaint.schema';
+import { SocketModule } from '../socket/socket.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Complaint.name, schema: ComplaintSchema },
     ]),
+    SocketModule,
   ],
   controllers: [ComplaintsController],
   providers: [ComplaintsService],

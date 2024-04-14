@@ -1,11 +1,50 @@
-import { Controller, Post, Body, Patch, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Req,
+  UseGuards,
+  Get,
+  Query,
+  Param,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { Public } from 'src/global/custom-decorators';
+import { Permissions, Public } from 'src/global/custom-decorators';
+import { AuthorizationGuard } from '../auth/authorization.guard';
+import { Types } from 'mongoose';
 
+@UseGuards(AuthorizationGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Permissions({ isAdmin: true, isEmployee: true })
+  @Patch('/deactivate/:id')
+  async deactivateUser(@Param('id') id: Types.ObjectId) {
+    return this.usersService.activateDeactivateUser(id, true);
+  }
+
+  @Permissions({ isAdmin: true, isEmployee: true })
+  @Patch('/activate/:id')
+  async activateUser(@Param('id') id: Types.ObjectId) {
+    return this.usersService.activateDeactivateUser(id, false);
+  }
+
+  @Permissions({ isAdmin: true, isEmployee: false })
+  @Patch('/admin')
+  async switchAdminRights(@Body() body: any) {
+    const { adminRights, userId } = body;
+    return this.usersService.switchAdminRights(userId, adminRights);
+  }
+
+  @Permissions({ isEmployee: true, isAdmin: true })
+  @Get('/cms')
+  async getCmsUsersPaginated(@Query() query: any) {
+    const { limit, page } = query;
+    return this.usersService.getCmsUsersPaginated(+limit, +page);
+  }
 
   @Patch('/password')
   async changePassword(
@@ -35,5 +74,11 @@ export class UsersController {
     const { verifToken, enteredOtp, newPassword } = body;
     await this.usersService.forgotPasswordVerifyOtp(verifToken, enteredOtp);
     await this.usersService.resetPassword(verifToken, newPassword);
+  }
+
+  @Permissions({ isAdmin: true, isEmployee: true })
+  @Get('/:id')
+  async getUserDetails(@Param('id') id: Types.ObjectId) {
+    return this.usersService.findOneById(id);
   }
 }

@@ -4,19 +4,25 @@ import { UpdateComplaintDto } from './dto/update-complaint.dto';
 import { Complaint } from './complaint.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { SocketService } from '../socket/socket.service';
 
 @Injectable()
 export class ComplaintsService {
   constructor(
     @InjectModel(Complaint.name) private complaintModel: Model<Complaint>,
+    private socketService: SocketService,
   ) {}
 
   async submitComplaint(
     CreateComplaintDto: CreateComplaintDto,
     createdBy: Types.ObjectId,
   ) {
+    const count = await this.complaintModel.countDocuments();
+    const numberedTitle = CreateComplaintDto.title + `#${count + 1}`;
+    const { title: _, ...rest } = CreateComplaintDto;
     const complaint = new this.complaintModel({
       ...CreateComplaintDto,
+      title: numberedTitle,
       createdBy,
     });
     await complaint.save();
@@ -35,16 +41,42 @@ export class ComplaintsService {
     return complaint;
   }
 
+  async getUserComplaintsGroupedStatus(userId: Types.ObjectId) {
+    const aggregation = [
+      {
+        $match: {
+          createdBy: `${userId}`,
+        },
+      },
+      {
+        $group: {
+          _id: '$status',
+          complaints: { $push: '$$ROOT' },
+          count: { $sum: 1 },
+        },
+      },
+    ];
+
+    return this.complaintModel.aggregate(aggregation);
+  }
+
   async getAllUserComplaints(
     userId: Types.ObjectId,
     limit: number,
     page: number,
   ) {
-    return this.complaintModel
+    const complaintsList = await this.complaintModel
       .find({ createdBy: userId })
       .limit(limit)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
+
+    const count = await this.countUserComplaints(userId);
+    const totalPages = Math.ceil(count / limit);
+    return {
+      complaintsList,
+      totalPages,
+    };
   }
 
   async countUserComplaints(userId?: any) {
@@ -72,7 +104,22 @@ export class ComplaintsService {
     return this.complaintModel.deleteOne({ _id: complaintId });
   }
 
-  // UpdateComplaintStatus Socket.io
+  async updateComplaintStatus(complaintId: Types.ObjectId, status: string) {
+    const complaint = await this.complaintModel.findById(complaintId);
+    if (!complaint) {
+      const err = new Error('Complaint not found.');
+      throw err;
+    }
+
+    complaint.status = status.toUpperCase();
+    const updatedComplaint = await complaint.save();
+    const userId = updatedComplaint.createdBy.toString();
+
+    this.socketService.emitEventToUser(userId, 'statusChanged', {
+      complaintId,
+      status,
+    });
+  }
 
   async getAllComplaintsFiltered(
     page: number,

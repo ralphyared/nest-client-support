@@ -7,10 +7,11 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { compareSync, hash } from 'bcrypt';
 import { OtpService } from './otp.service';
 import * as nodemailer from 'nodemailer';
+import { AddCmsUserDto } from '../auth/dto/add-cms-user.dto';
 
 @Injectable()
 export class UsersService {
-  private transporter;
+  private transporter: any;
 
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
@@ -27,26 +28,75 @@ export class UsersService {
     });
   }
 
+  async activateDeactivateUser(
+    userId: Types.ObjectId,
+    deactivationStatus: boolean,
+  ) {
+    const user = await this.userModel.findById(userId);
+    user.isDeactivated = deactivationStatus;
+    user.save();
+    return {
+      message: `User deactivation status set to: ${deactivationStatus}`,
+    };
+  }
+
+  async switchAdminRights(userId: Types.ObjectId, adminRights: boolean) {
+    const user = await this.userModel.findById(userId);
+    user.isAdmin = adminRights;
+    user.save();
+    return {
+      message: `User admin status set to: ${adminRights}`,
+    };
+  }
+
+  async getCmsUsersPaginated(limit: number, page: number) {
+    const aggregation = [
+      {
+        $match: {
+          $or: [{ isEmployee: true }, { isAdmin: true }],
+        },
+      },
+      { $skip: (page - 1) * limit },
+      { $limit: limit },
+    ];
+    const usersList = await this.userModel.aggregate(aggregation);
+    const count = await this.userModel.countDocuments({
+      $or: [{ isEmployee: true }, { isAdmin: true }],
+    });
+    const totalPages = Math.ceil(+count / limit);
+    return {
+      usersList,
+      totalPages,
+    };
+  }
+
   async create(SignupDto: SignupDto, hashedPw: string) {
-    const {
-      email,
-      firstName,
-      isAdmin,
-      isDeactivated,
-      isEmployee,
-      isVip,
-      lastName,
-    } = SignupDto;
+    const { email, firstName, isVip, lastName } = SignupDto;
 
     const user = new this.userModel({
       email,
       password: hashedPw,
       firstName,
       lastName,
-      isAdmin,
-      isDeactivated,
-      isEmployee,
       isVip,
+    });
+    const savedUser = await user.save();
+
+    return savedUser;
+  }
+
+  async createCms(AddCmsUserDto: AddCmsUserDto, hashedPw: string) {
+    const { email, isAdmin, isEmployee, firstName, isVip, lastName } =
+      AddCmsUserDto;
+
+    const user = new this.userModel({
+      email,
+      password: hashedPw,
+      firstName,
+      lastName,
+      isVip,
+      isAdmin,
+      isEmployee,
     });
     const savedUser = await user.save();
 
