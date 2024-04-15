@@ -1,9 +1,10 @@
 import { Injectable, Query } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './category.schema';
+import { IdDto, PaginationDto } from 'src/global/common.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -11,8 +12,9 @@ export class CategoriesService {
     @InjectModel(Category.name) private categoryModel: Model<Category>,
   ) {}
 
-  async getCategoryById(categoryId: Types.ObjectId) {
-    const category = await this.categoryModel.findById(categoryId);
+  async getCategoryById(param: IdDto) {
+    const { id } = param;
+    const category = await this.categoryModel.findById(id);
     if (!category) {
       const err = new Error('Category not found.');
       throw err;
@@ -24,41 +26,47 @@ export class CategoriesService {
     return this.categoryModel.find();
   }
 
-  async createCategory(createCategoryDto: CreateCategoryDto) {
-    const category = new this.categoryModel(createCategoryDto);
+  async createCategory(body: CreateCategoryDto) {
+    const category = new this.categoryModel(body);
     return category.save();
   }
 
-  async updateCategory(
-    categoryId: Types.ObjectId,
-    updateCategoryDto: UpdateCategoryDto,
-  ) {
-    await this.getCategoryById(categoryId);
-    return this.categoryModel.updateOne(
-      { _id: categoryId },
+  async updateCategory(param: IdDto, body: UpdateCategoryDto) {
+    const { id } = param;
+    const { description, title } = body;
+    await this.categoryModel.updateOne(
+      { _id: id },
       {
         $set: {
-          description: updateCategoryDto.description,
-          title: updateCategoryDto.title,
+          description,
+          title,
         },
       },
     );
   }
 
-  async deleteCategory(categoryId: Types.ObjectId) {
-    await this.getCategoryById(categoryId);
-    await this.categoryModel.deleteOne({ _id: categoryId });
+  async deleteCategory(param: IdDto) {
+    const { id } = param;
+    await this.categoryModel.deleteOne({ _id: id });
   }
 
   async countCategories() {
     return this.categoryModel.countDocuments();
   }
 
-  async getAllCategoriesAdmin(page: number, limit: number) {
-    return this.categoryModel
+  async getAllCategoriesAdmin(query: PaginationDto) {
+    const { limit, page } = query;
+    const categoriesList = await this.categoryModel
       .find()
-      .limit(limit)
-      .skip((page - 1) * limit)
+      .limit(+limit)
+      .skip((+page - 1) * +limit)
       .sort({ createdAt: -1 });
+
+    const count = await this.countCategories();
+    const totalPages = Math.ceil(count / +limit);
+    return {
+      categoriesList,
+      totalPages,
+    };
   }
 }

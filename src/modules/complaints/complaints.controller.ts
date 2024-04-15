@@ -16,6 +16,12 @@ import { Types } from 'mongoose';
 import { Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';
+import {
+  FilteredPaginationDto,
+  IdDto,
+  PaginationDto,
+} from 'src/global/common.dto';
+import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
 
 @UseGuards(AuthorizationGuard)
 @Controller('complaints')
@@ -25,63 +31,40 @@ export class ComplaintsController {
   @Roles(UserRole.ADMIN)
   @Patch('/status/:id')
   async updateComplaintStatus(
-    @Param('id') id: Types.ObjectId,
-    @Body('status') status: string,
+    @Param() param: IdDto,
+    @Body() body: UpdateComplaintStatusDto,
   ) {
-    await this.complaintsService.updateComplaintStatus(id, status);
+    return this.complaintsService.updateComplaintStatus(param, body);
   }
 
   @Post()
-  async submitComplaint(
-    @Body() createComplaintDto: CreateComplaintDto,
-    @Req() req: any,
-  ) {
-    return this.complaintsService.submitComplaint(
-      createComplaintDto,
-      req.user._id,
-    );
+  async submitComplaint(@Body() body: CreateComplaintDto) {
+    return this.complaintsService.submitComplaint(body);
   }
 
   @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get('/all')
-  async getAllComplaintsFiltered(@Query() query: any) {
-    const { page, limit, userId, status } = query;
-    const complaintsList =
-      await this.complaintsService.getAllComplaintsFiltered(
-        +page,
-        +limit,
-        userId,
-        status,
-      );
-
-    const count = await this.complaintsService.countUserComplaints(userId);
-    return {
-      complaintsList,
-      totalPages: Math.ceil(count / +limit),
-    };
+  async getAllComplaintsFiltered(@Query() query: FilteredPaginationDto) {
+    return this.complaintsService.getAllComplaintsFiltered(query);
   }
 
   @Get('/status')
-  async getUserComplaintsGroupedStatus(@Req() req: any) {
-    const userId = req.user._id;
-    return this.complaintsService.getUserComplaintsGroupedStatus(userId);
+  async getUserComplaintsGroupedStatus() {
+    return this.complaintsService.getUserComplaintsGroupedStatus();
   }
 
   @Get('/list')
-  async getAllUserComplaints(@Query() query: any, @Req() req: any) {
-    const { limit, page } = query;
-    const userId = req.user._id;
-
-    return this.complaintsService.getAllUserComplaints(userId, +limit, +page);
+  async getAllUserComplaints(@Query() query: PaginationDto) {
+    return this.complaintsService.getAllUserComplaints(query);
   }
 
   @Get(':id')
-  async getUserComplaint(@Param('id') id: Types.ObjectId, @Req() req: any) {
-    return this.complaintsService.getUserComplaint(req.user._id, id);
+  async getUserComplaint(@Param() param: IdDto) {
+    return this.complaintsService.getUserComplaint(param);
   }
 
   @Delete(':id')
-  async deleteUserComplaint(@Param('id') id: Types.ObjectId, @Req() req: any) {
-    return this.complaintsService.deleteUserComplaint(req.user._id, id);
+  async deleteUserComplaint(@Param() param: IdDto) {
+    return this.complaintsService.deleteUserComplaint(param);
   }
 }

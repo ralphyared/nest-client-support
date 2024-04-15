@@ -1,13 +1,19 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import { REQUEST, Reflector } from '@nestjs/core';
 import { UsersService } from '../users/users.service';
-import { UserRole } from 'src/global/enums';
+import { UserRequest } from 'src/global/types';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private usersService: UsersService,
+    @Inject(REQUEST) private readonly request: UserRequest,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -17,8 +23,8 @@ export class AuthorizationGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = await this.usersService.findOneById(request.user._id);
+    const userId = { id: this.request.user._id };
+    const user = await this.usersService.findOneById(userId);
 
     const isAuthorized = roles.includes(user.role);
 

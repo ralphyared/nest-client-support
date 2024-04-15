@@ -11,7 +11,6 @@ import { RefreshToken, RefreshTokenSchema } from './refresh-token.schema';
 
 @Module({
   imports: [
-    UsersModule,
     JwtModule.register({
       global: true,
       secret: `${process.env.JWT_SECRET}`,
@@ -19,11 +18,13 @@ import { RefreshToken, RefreshTokenSchema } from './refresh-token.schema';
     MongooseModule.forFeature([
       { name: RefreshToken.name, schema: RefreshTokenSchema },
     ]),
+    UsersModule,
   ],
   controllers: [AuthController],
   providers: [
     AuthorizationGuard,
     AuthService,
+    AuthenticationGuard,
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,

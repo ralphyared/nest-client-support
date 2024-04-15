@@ -1,10 +1,10 @@
+import { Reflector } from '@nestjs/core';
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UsersService } from '../users/users.service';
@@ -13,8 +13,8 @@ import { IS_PUBLIC_KEY } from 'src/global/custom-decorators';
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   constructor(
-    private jwtService: JwtService,
     private reflector: Reflector,
+    private jwtService: JwtService,
     private usersService: UsersService,
   ) {}
 
@@ -39,8 +39,9 @@ export class AuthenticationGuard implements CanActivate {
       });
 
       request['user'] = payload;
+      const userId = { id: request.user._id };
+      const user = await this.usersService.findOneById(userId);
 
-      const user = await this.usersService.findOneById(payload._id);
       if (user.isDeactivated === true) {
         throw new UnauthorizedException('User is deactivated');
       }

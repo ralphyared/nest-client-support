@@ -12,10 +12,10 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Types } from 'mongoose';
 import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';
+import { IdDto, PaginationDto } from 'src/global/common.dto';
 
 @UseGuards(AuthorizationGuard)
 @Controller('categories')
@@ -24,8 +24,8 @@ export class CategoriesController {
 
   @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoriesService.createCategory(createCategoryDto);
+  async create(@Body() body: CreateCategoryDto) {
+    return this.categoriesService.createCategory(body);
   }
 
   @Public()
@@ -36,38 +36,25 @@ export class CategoriesController {
 
   @Roles(UserRole.ADMIN)
   @Get('/all')
-  async getAll(@Query() query: any) {
-    const { limit, page } = query;
-    const categoryList = await this.categoriesService.getAllCategoriesAdmin(
-      +page,
-      +limit,
-    );
-    const count = await this.categoriesService.countCategories();
-    const totalPages = Math.ceil(count / +limit);
-    return {
-      categoryList,
-      totalPages,
-    };
+  async getAll(@Query() query: PaginationDto) {
+    return this.categoriesService.getAllCategoriesAdmin(query);
   }
 
   @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get(':id')
-  async findOne(@Param('id') id: Types.ObjectId) {
-    return this.categoriesService.getCategoryById(id);
+  async findOne(@Param() param: IdDto) {
+    return this.categoriesService.getCategoryById(param);
   }
 
   @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Patch(':id')
-  async update(
-    @Param('id') id: Types.ObjectId,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
-    return this.categoriesService.updateCategory(id, updateCategoryDto);
+  async update(@Param() param: IdDto, @Body() body: UpdateCategoryDto) {
+    return this.categoriesService.updateCategory(param, body);
   }
 
   @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Delete(':id')
-  async remove(@Param('id') id: Types.ObjectId) {
-    return this.categoriesService.deleteCategory(id);
+  async remove(@Param() param: IdDto) {
+    return this.categoriesService.deleteCategory(param);
   }
 }

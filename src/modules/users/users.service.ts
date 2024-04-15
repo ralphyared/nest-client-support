@@ -1,14 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SignupDto } from '../auth/dto/signup.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { compareSync, hash } from 'bcrypt';
 import { OtpService } from './otp.service';
 import * as nodemailer from 'nodemailer';
 import { AddCmsUserDto } from '../auth/dto/add-cms-user.dto';
 import { UserRole } from 'src/global/enums';
+import { IdDto, PaginationDto } from 'src/global/common.dto';
+import { SetAdminRightsDto } from './dto/set-admin-rights.dto';
+import { UserRequest } from 'src/global/types';
+import {
+  ForgotPasswordDto,
+  ForgotPasswordResendDto,
+  ResetPasswordDto,
+} from './dto/forgot-password-process.dto';
 
 @Injectable()
 export class UsersService {
@@ -29,11 +37,9 @@ export class UsersService {
     });
   }
 
-  async activateDeactivateUser(
-    userId: Types.ObjectId,
-    deactivationStatus: boolean,
-  ) {
-    const user = await this.userModel.findById(userId);
+  async activateDeactivateUser(param: IdDto, deactivationStatus: boolean) {
+    const { id } = param;
+    const user = await this.userModel.findById(id);
     user.isDeactivated = deactivationStatus;
     user.save();
     return {
@@ -41,7 +47,8 @@ export class UsersService {
     };
   }
 
-  async switchAdminRights(userId: Types.ObjectId, role: string) {
+  async switchAdminRights(body: SetAdminRightsDto) {
+    const { role, userId } = body;
     const user = await this.userModel.findById(userId);
     user.role = role;
     user.save();
@@ -50,51 +57,50 @@ export class UsersService {
     };
   }
 
-  async getCmsUsersPaginated(limit: number, page: number) {
+  async getCmsUsersPaginated(query: PaginationDto) {
+    const { limit, page } = query;
     const aggregation = [
       {
         $match: {
           role: { $ne: UserRole.USER },
         },
       },
-      { $skip: (page - 1) * limit },
-      { $limit: limit },
+      { $skip: (+page - 1) * +limit },
+      { $limit: +limit },
     ];
     const usersList = await this.userModel.aggregate(aggregation);
     const count = await this.userModel.countDocuments({
       role: { $ne: UserRole.USER },
     });
-    const totalPages = Math.ceil(+count / limit);
+    const totalPages = Math.ceil(+count / +limit);
     return {
       usersList,
       totalPages,
     };
   }
 
-  async create(SignupDto: SignupDto, hashedPw: string) {
-    const { email, firstName, isVip, lastName } = SignupDto;
+  async create(body: SignupDto, hashedPw: string) {
+    const { email, firstName, lastName } = body;
 
     const user = new this.userModel({
       email,
       password: hashedPw,
       firstName,
       lastName,
-      isVip,
     });
     const savedUser = await user.save();
 
     return savedUser;
   }
 
-  async createCms(AddCmsUserDto: AddCmsUserDto, hashedPw: string) {
-    const { email, role, firstName, isVip, lastName } = AddCmsUserDto;
+  async createCms(body: AddCmsUserDto, hashedPw: string) {
+    const { email, role, firstName, lastName } = body;
 
     const user = new this.userModel({
       email,
       password: hashedPw,
       firstName,
       lastName,
-      isVip,
       role,
     });
     const savedUser = await user.save();
@@ -106,16 +112,14 @@ export class UsersService {
     return this.userModel.findOne({ email });
   }
 
-  async findOneById(id: Types.ObjectId) {
+  async findOneById(param: IdDto) {
+    const { id } = param;
     return this.userModel.findById(id);
   }
 
-  async changePassword(
-    ChangePasswordDto: ChangePasswordDto,
-    userId: Types.ObjectId,
-  ) {
-    const { newPassword, password } = ChangePasswordDto;
-
+  async changePassword(body: ChangePasswordDto, req: any) {
+    const { newPassword, password } = body;
+    const userId = req.user._id;
     const user = await this.userModel.findById(userId);
     if (!user) {
       const err = new Error('User not found.');
@@ -132,7 +136,8 @@ export class UsersService {
     return user.save();
   }
 
-  async forgotPassword(email: string) {
+  async forgotPassword(body: ForgotPasswordDto) {
+    const { email } = body;
     const user = await this.userModel.findOne({ email });
     if (!user) {
       const err = new Error();
@@ -140,19 +145,23 @@ export class UsersService {
     }
     const otp = await this.otpService.createOtp(user._id);
     this.sendOtpByEmail(email, otp.otp);
+    return otp.verifToken;
   }
 
-  async forgotPasswordResend(verifToken: string) {
+  async forgotPasswordResend(body: ForgotPasswordResendDto) {
+    const { verifToken } = body;
     const otp = await this.otpService.incrementOtp(verifToken);
     const user = await this.userModel.findById(otp.userId);
     this.sendOtpByEmail(user.email, otp.otp);
   }
 
-  async forgotPasswordVerifyOtp(verifToken: string, enteredOtp: number) {
+  async forgotPasswordVerifyOtp(body: ResetPasswordDto) {
+    const { verifToken, enteredOtp } = body;
     return this.otpService.verifyOtp(verifToken, +enteredOtp);
   }
 
-  async resetPassword(verifToken: string, newPassword: string) {
+  async resetPassword(body: ResetPasswordDto) {
+    const { verifToken, newPassword } = body;
     const userId = await this.otpService.getUserIdFromOtp(verifToken);
     const user = await this.userModel.findById(userId);
     const newhashedPw = await hash(newPassword, 12);

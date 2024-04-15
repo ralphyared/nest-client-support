@@ -12,6 +12,8 @@ import { AddCmsUserDto } from './dto/add-cms-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { RefreshToken } from './refresh-token.schema';
 import { Model } from 'mongoose';
+import { IdDto } from 'src/global/common.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,8 +24,8 @@ export class AuthService {
     private refreshTokenModel: Model<RefreshToken>,
   ) {}
 
-  async signup(SignupDto: SignupDto) {
-    const { email, password } = SignupDto;
+  async signup(body: SignupDto) {
+    const { email, password } = body;
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
@@ -33,7 +35,7 @@ export class AuthService {
 
     const hashedPw = await hash(password, 12);
 
-    const savedUser = await this.usersService.create(SignupDto, hashedPw);
+    const savedUser = await this.usersService.create(body, hashedPw);
     const userId = savedUser._id;
 
     const token = await this.signUserJwt(savedUser);
@@ -42,8 +44,8 @@ export class AuthService {
     return { token, userId, refreshToken };
   }
 
-  async cmsLogin(LoginDto: LoginDto) {
-    const { email, password } = LoginDto;
+  async cmsLogin(body: LoginDto) {
+    const { email, password } = body;
 
     const user = await this.usersService.findOne(email);
     if (!user) {
@@ -67,8 +69,8 @@ export class AuthService {
     return { token, userId, refreshToken };
   }
 
-  async login(LoginDto: LoginDto) {
-    const { email, password } = LoginDto;
+  async login(body: LoginDto) {
+    const { email, password } = body;
 
     const user = await this.usersService.findOne(email);
     if (!user) {
@@ -108,11 +110,13 @@ export class AuthService {
     return refreshToken;
   }
 
-  async refreshJwtToken(refreshToken: string) {
+  async refreshJwtToken(body: RefreshTokenDto) {
+    const { refreshToken } = body;
     const refreshDoc = await this.refreshTokenModel.findOne({ refreshToken });
     if (!refreshDoc) throw new NotFoundException();
 
-    const user = await this.usersService.findOneById(refreshDoc.userId);
+    const id: IdDto = { id: refreshDoc.userId };
+    const user = await this.usersService.findOneById(id);
 
     const userId = user._id;
     const token = await this.signUserJwt(user);
@@ -132,8 +136,8 @@ export class AuthService {
     return token;
   }
 
-  async addCmsUser(AddCmsUserDto: AddCmsUserDto) {
-    const { email, password } = AddCmsUserDto;
+  async addCmsUser(body: AddCmsUserDto) {
+    const { email, password } = body;
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
@@ -143,10 +147,7 @@ export class AuthService {
 
     const hashedPw = await hash(password, 12);
 
-    const savedUser = await this.usersService.createCms(
-      AddCmsUserDto,
-      hashedPw,
-    );
+    const savedUser = await this.usersService.createCms(body, hashedPw);
     const userId = savedUser._id;
 
     const token = await this.signUserJwt(savedUser);

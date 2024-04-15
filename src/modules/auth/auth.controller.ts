@@ -6,6 +6,7 @@ import { Roles, Public } from 'src/global/custom-decorators';
 import { AddCmsUserDto } from './dto/add-cms-user.dto';
 import { AuthorizationGuard } from './authorization.guard';
 import { UserRole } from 'src/global/enums';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @UseGuards(AuthorizationGuard)
 @Controller()
@@ -14,31 +15,31 @@ export class AuthController {
 
   @Public()
   @Post('/signup')
-  async signup(@Body() SignupDto: SignupDto) {
-    return this.authService.signup(SignupDto);
+  async signup(@Body() body: SignupDto) {
+    return this.authService.signup(body);
   }
 
   @Public()
   @Post('/login')
-  async login(@Body() LoginDto: LoginDto) {
-    return this.authService.login(LoginDto);
+  async login(@Body() body: LoginDto) {
+    return this.authService.login(body);
   }
 
   @Public()
   @Post('/cms-login')
-  async cmsLogin(@Body() LoginDto: LoginDto) {
-    return this.authService.cmsLogin(LoginDto);
+  async cmsLogin(@Body() body: LoginDto) {
+    return this.authService.cmsLogin(body);
   }
 
   @Roles(UserRole.ADMIN)
   @Post('/add-cms-user')
-  async addCmsUser(@Body() AddCmsUserDto: AddCmsUserDto) {
-    return this.authService.addCmsUser(AddCmsUserDto);
+  async addCmsUser(@Body() body: AddCmsUserDto) {
+    return this.authService.addCmsUser(body);
   }
 
   @Public()
   @Post('/refresh-token')
-  async refreshJwtToken(@Body('refreshToken') refreshToken: string) {
-    return this.authService.refreshJwtToken(refreshToken);
+  async refreshJwtToken(@Body() body: RefreshTokenDto) {
+    return this.authService.refreshJwtToken(body);
   }
 }
