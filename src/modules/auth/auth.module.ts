@@ -6,6 +6,8 @@ import { UsersModule } from '../users/users.module';
 import { AuthenticationGuard } from './authentication.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthorizationGuard } from './authorization.guard';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RefreshToken, RefreshTokenSchema } from './refresh-token.schema';
 
 @Module({
   imports: [
@@ -13,8 +15,10 @@ import { AuthorizationGuard } from './authorization.guard';
     JwtModule.register({
       global: true,
       secret: `${process.env.JWT_SECRET}`,
-      signOptions: { expiresIn: 900 },
     }),
+    MongooseModule.forFeature([
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
   ],
   controllers: [AuthController],
   providers: [

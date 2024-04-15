@@ -13,15 +13,16 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Types } from 'mongoose';
-import { Permissions, Public } from 'src/global/custom-decorators';
+import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
+import { UserRole } from 'src/global/enums';
 
 @UseGuards(AuthorizationGuard)
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Post()
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.createCategory(createCategoryDto);
@@ -33,7 +34,7 @@ export class CategoriesController {
     return this.categoriesService.getAllCategories();
   }
 
-  @Permissions({ isEmployee: false, isAdmin: true })
+  @Roles(UserRole.ADMIN)
   @Get('/all')
   async getAll(@Query() query: any) {
     const { limit, page } = query;
@@ -49,13 +50,13 @@ export class CategoriesController {
     };
   }
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get(':id')
   async findOne(@Param('id') id: Types.ObjectId) {
     return this.categoriesService.getCategoryById(id);
   }
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Patch(':id')
   async update(
     @Param('id') id: Types.ObjectId,
@@ -64,7 +65,7 @@ export class CategoriesController {
     return this.categoriesService.updateCategory(id, updateCategoryDto);
   }
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Delete(':id')
   async remove(@Param('id') id: Types.ObjectId) {
     return this.categoriesService.deleteCategory(id);

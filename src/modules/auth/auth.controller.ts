@@ -2,9 +2,10 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import { Permissions, Public } from 'src/global/custom-decorators';
+import { Roles, Public } from 'src/global/custom-decorators';
 import { AddCmsUserDto } from './dto/add-cms-user.dto';
 import { AuthorizationGuard } from './authorization.guard';
+import { UserRole } from 'src/global/enums';
 
 @UseGuards(AuthorizationGuard)
 @Controller()
@@ -29,9 +30,15 @@ export class AuthController {
     return this.authService.cmsLogin(LoginDto);
   }
 
-  @Permissions({ isAdmin: true, isEmployee: false })
+  @Roles(UserRole.ADMIN)
   @Post('/add-cms-user')
   async addCmsUser(@Body() AddCmsUserDto: AddCmsUserDto) {
     return this.authService.addCmsUser(AddCmsUserDto);
+  }
+
+  @Public()
+  @Post('/refresh-token')
+  async refreshJwtToken(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refreshJwtToken(refreshToken);
   }
 }

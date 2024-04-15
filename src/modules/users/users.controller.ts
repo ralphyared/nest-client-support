@@ -11,35 +11,36 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { Permissions, Public } from 'src/global/custom-decorators';
+import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { Types } from 'mongoose';
+import { UserRole } from 'src/global/enums';
 
 @UseGuards(AuthorizationGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Permissions({ isAdmin: true, isEmployee: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Patch('/deactivate/:id')
   async deactivateUser(@Param('id') id: Types.ObjectId) {
     return this.usersService.activateDeactivateUser(id, true);
   }
 
-  @Permissions({ isAdmin: true, isEmployee: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Patch('/activate/:id')
   async activateUser(@Param('id') id: Types.ObjectId) {
     return this.usersService.activateDeactivateUser(id, false);
   }
 
-  @Permissions({ isAdmin: true, isEmployee: false })
+  @Roles(UserRole.ADMIN)
   @Patch('/admin')
   async switchAdminRights(@Body() body: any) {
-    const { adminRights, userId } = body;
-    return this.usersService.switchAdminRights(userId, adminRights);
+    const { role, userId } = body;
+    return this.usersService.switchAdminRights(userId, role);
   }
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get('/cms')
   async getCmsUsersPaginated(@Query() query: any) {
     const { limit, page } = query;
@@ -76,7 +77,7 @@ export class UsersController {
     await this.usersService.resetPassword(verifToken, newPassword);
   }
 
-  @Permissions({ isAdmin: true, isEmployee: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get('/:id')
   async getUserDetails(@Param('id') id: Types.ObjectId) {
     return this.usersService.findOneById(id);

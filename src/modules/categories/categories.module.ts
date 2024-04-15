@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CategoriesService } from './categories.service';
 import { CategoriesController } from './categories.controller';
 import { Category, CategorySchema } from './category.schema';
-import { AuthorizationGuard } from '../auth/authorization.guard';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({

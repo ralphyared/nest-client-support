@@ -8,6 +8,7 @@ import { compareSync, hash } from 'bcrypt';
 import { OtpService } from './otp.service';
 import * as nodemailer from 'nodemailer';
 import { AddCmsUserDto } from '../auth/dto/add-cms-user.dto';
+import { UserRole } from 'src/global/enums';
 
 @Injectable()
 export class UsersService {
@@ -40,12 +41,12 @@ export class UsersService {
     };
   }
 
-  async switchAdminRights(userId: Types.ObjectId, adminRights: boolean) {
+  async switchAdminRights(userId: Types.ObjectId, role: string) {
     const user = await this.userModel.findById(userId);
-    user.isAdmin = adminRights;
+    user.role = role;
     user.save();
     return {
-      message: `User admin status set to: ${adminRights}`,
+      message: `User role set to: ${role}`,
     };
   }
 
@@ -53,7 +54,7 @@ export class UsersService {
     const aggregation = [
       {
         $match: {
-          $or: [{ isEmployee: true }, { isAdmin: true }],
+          role: { $ne: UserRole.USER },
         },
       },
       { $skip: (page - 1) * limit },
@@ -61,7 +62,7 @@ export class UsersService {
     ];
     const usersList = await this.userModel.aggregate(aggregation);
     const count = await this.userModel.countDocuments({
-      $or: [{ isEmployee: true }, { isAdmin: true }],
+      role: { $ne: UserRole.USER },
     });
     const totalPages = Math.ceil(+count / limit);
     return {
@@ -86,8 +87,7 @@ export class UsersService {
   }
 
   async createCms(AddCmsUserDto: AddCmsUserDto, hashedPw: string) {
-    const { email, isAdmin, isEmployee, firstName, isVip, lastName } =
-      AddCmsUserDto;
+    const { email, role, firstName, isVip, lastName } = AddCmsUserDto;
 
     const user = new this.userModel({
       email,
@@ -95,8 +95,7 @@ export class UsersService {
       firstName,
       lastName,
       isVip,
-      isAdmin,
-      isEmployee,
+      role,
     });
     const savedUser = await user.save();
 

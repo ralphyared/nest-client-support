@@ -8,19 +8,21 @@ import {
   Delete,
   Req,
   Query,
-  SetMetadata,
   UseGuards,
 } from '@nestjs/common';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { Types } from 'mongoose';
-import { Permissions } from 'src/global/custom-decorators';
+import { Roles } from 'src/global/custom-decorators';
+import { AuthorizationGuard } from '../auth/authorization.guard';
+import { UserRole } from 'src/global/enums';
 
+@UseGuards(AuthorizationGuard)
 @Controller('complaints')
 export class ComplaintsController {
   constructor(private readonly complaintsService: ComplaintsService) {}
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN)
   @Patch('/status/:id')
   async updateComplaintStatus(
     @Param('id') id: Types.ObjectId,
@@ -40,7 +42,7 @@ export class ComplaintsController {
     );
   }
 
-  @Permissions({ isEmployee: true, isAdmin: true })
+  @Roles(UserRole.ADMIN, UserRole.EMPLOYEE)
   @Get('/all')
   async getAllComplaintsFiltered(@Query() query: any) {
     const { page, limit, userId, status } = query;
