@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UsersService } from '../users/users.service';
 import { IS_PUBLIC_KEY } from 'src/global/custom-decorators';
+import { userDeactivatedError } from 'src/global/errors/auth.errors';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -43,7 +44,7 @@ export class AuthenticationGuard implements CanActivate {
       const user = await this.usersService.findOneById(userId);
 
       if (user.isDeactivated === true) {
-        throw new UnauthorizedException('User is deactivated');
+        throw new UnauthorizedException(userDeactivatedError);
       }
     } catch (err) {
       throw err;

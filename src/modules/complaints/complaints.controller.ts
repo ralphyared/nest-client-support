@@ -20,7 +20,7 @@ import {
   FilteredPaginationDto,
   IdDto,
   PaginationDto,
-} from 'src/global/common.dto';
+} from 'src/global/commons.dto';
 import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
 
 @UseGuards(AuthorizationGuard)

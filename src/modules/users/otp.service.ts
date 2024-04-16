@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Otp } from './otp.schema';
 import { Model, Types } from 'mongoose';
+import { incorrectOtpError } from 'src/global/errors/users.errors';
 
 @Injectable()
 export class OtpService {
@@ -44,7 +45,7 @@ export class OtpService {
   async verifyOtp(verifToken: string, enteredOtp: number) {
     const otp = await this.otpModel.findOne({ verifToken });
     if (!(enteredOtp === otp.otp)) {
-      throw new UnauthorizedException('Incorrect OTP.');
+      throw new UnauthorizedException(incorrectOtpError);
     }
     return;
   }
