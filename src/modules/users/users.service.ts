@@ -23,6 +23,7 @@ import {
 } from './dto/forgot-password-process.dto';
 import { incorrectPasswordError } from 'src/global/errors/auth.errors';
 import { userNotFoundError } from 'src/global/errors/users.errors';
+import { UserRequest } from 'src/global/types';
 
 @Injectable()
 export class UsersService {
@@ -123,7 +124,7 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
-  async changePassword(body: ChangePasswordDto, req: any) {
+  async changePassword(body: ChangePasswordDto, req: UserRequest) {
     const { newPassword, password } = body;
     const userId = req.user._id;
     const user = await this.userModel.findById(userId);
@@ -137,7 +138,7 @@ export class UsersService {
     }
     const newhashedPw = await hash(newPassword, 12);
     user.password = newhashedPw;
-    return user.save();
+    await user.save();
   }
 
   async forgotPassword(body: ForgotPasswordDto) {
