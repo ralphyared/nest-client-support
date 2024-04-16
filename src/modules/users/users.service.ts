@@ -14,14 +14,16 @@ import { OtpService } from './otp.service';
 import * as nodemailer from 'nodemailer';
 import { AddCmsUserDto } from '../auth/dto/add-cms-user.dto';
 import { UserRole } from 'src/global/enums';
-import { IdDto, PaginationDto } from 'src/global/common.dto';
+import { IdDto, PaginationDto } from 'src/global/commons.dto';
 import { SetAdminRightsDto } from './dto/set-admin-rights.dto';
-import { UserRequest } from 'src/global/types';
 import {
   ForgotPasswordDto,
   ForgotPasswordResendDto,
   ResetPasswordDto,
 } from './dto/forgot-password-process.dto';
+import { incorrectPasswordError } from 'src/global/errors/auth.errors';
+import { userNotFoundError } from 'src/global/errors/users.errors';
+import { UserRequest } from 'src/global/types';
 
 @Injectable()
 export class UsersService {
@@ -122,21 +124,21 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
-  async changePassword(body: ChangePasswordDto, req: any) {
+  async changePassword(body: ChangePasswordDto, req: UserRequest) {
     const { newPassword, password } = body;
     const userId = req.user._id;
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new NotFoundException('User not found.');
+      throw new NotFoundException(userNotFoundError);
     }
 
     const isEqual = compareSync(password, user.password!);
     if (!isEqual) {
-      throw new UnauthorizedException('Incorrect password.');
+      throw new UnauthorizedException(incorrectPasswordError);
     }
     const newhashedPw = await hash(newPassword, 12);
     user.password = newhashedPw;
-    return user.save();
+    await user.save();
   }
 
   async forgotPassword(body: ForgotPasswordDto) {

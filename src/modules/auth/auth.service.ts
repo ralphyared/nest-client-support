@@ -14,12 +14,18 @@ import { AddCmsUserDto } from './dto/add-cms-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { RefreshToken } from './refresh-token.schema';
 import { Model } from 'mongoose';
-import { IdDto } from 'src/global/common.dto';
+import { IdDto } from 'src/global/commons.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { UserRole } from 'src/global/enums';
 import * as randomstring from 'randomstring';
 import { UserDocument } from '../users/user.schema';
 import config from '../../global/config';
+import {
+  incorrectPasswordError,
+  userExistsError,
+  userNotCmsError,
+  userNotExistError,
+} from 'src/global/errors/auth.errors';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +52,7 @@ export class AuthService {
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
-      throw new ConflictException('User already exists.');
+      throw new ConflictException(userExistsError);
     }
 
     const hashedPw = await this.hashPassword(password);
@@ -61,16 +67,16 @@ export class AuthService {
 
     const user = await this.usersService.findOne(email);
     if (!user) {
-      throw new NotFoundException('User does not exist.');
+      throw new NotFoundException(userNotExistError);
     }
 
     if (user.role === UserRole.USER) {
-      throw new ForbiddenException('User is not a CMS user.');
+      throw new ForbiddenException(userNotCmsError);
     }
 
     const isEqual = compareSync(password, user.password);
     if (!isEqual) {
-      throw new UnauthorizedException('Incorrect password.');
+      throw new UnauthorizedException(incorrectPasswordError);
     }
 
     const userId = user._id;
@@ -85,12 +91,12 @@ export class AuthService {
 
     const user = await this.usersService.findOne(email);
     if (!user) {
-      throw new NotFoundException('User does not exist.');
+      throw new NotFoundException(userNotExistError);
     }
 
     const isEqual = compareSync(password, user.password);
     if (!isEqual) {
-      throw new UnauthorizedException('Incorrect password.');
+      throw new UnauthorizedException(incorrectPasswordError);
     }
 
     return this.generateLoginResponse(user);
@@ -147,7 +153,7 @@ export class AuthService {
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
-      throw new ConflictException('User already exists.');
+      throw new ConflictException(userExistsError);
     }
 
     const hashedPw = await this.hashPassword(password);

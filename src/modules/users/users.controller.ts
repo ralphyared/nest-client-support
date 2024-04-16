@@ -14,13 +14,14 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';
-import { IdDto, PaginationDto } from 'src/global/common.dto';
+import { IdDto, PaginationDto } from 'src/global/commons.dto';
 import { SetAdminRightsDto } from './dto/set-admin-rights.dto';
 import {
   ForgotPasswordDto,
   ForgotPasswordResendDto,
   ResetPasswordDto,
 } from './dto/forgot-password-process.dto';
+import { UserRequest } from 'src/global/types';
 
 @UseGuards(AuthorizationGuard)
 @Controller('users')
@@ -53,7 +54,10 @@ export class UsersController {
 
   // Issue with Dependency on Service with Request Scoped Provider
   @Patch('/password')
-  async changePassword(@Body() body: ChangePasswordDto, @Req() req: any) {
+  async changePassword(
+    @Body() body: ChangePasswordDto,
+    @Req() req: UserRequest,
+  ) {
     return this.usersService.changePassword(body, req);
   }
 

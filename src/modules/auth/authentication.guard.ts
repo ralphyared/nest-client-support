@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UsersService } from '../users/users.service';
 import { IS_PUBLIC_KEY } from 'src/global/custom-decorators';
+import { userDeactivatedError } from 'src/global/errors/auth.errors';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

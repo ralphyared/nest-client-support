@@ -15,7 +15,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';
-import { IdDto, PaginationDto } from 'src/global/common.dto';
+import { IdDto, PaginationDto } from 'src/global/commons.dto';
 
 @UseGuards(AuthorizationGuard)
 @Controller('categories')

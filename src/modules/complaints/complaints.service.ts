@@ -14,9 +14,10 @@ import {
   FilteredPaginationDto,
   IdDto,
   PaginationDto,
-} from 'src/global/common.dto';
+} from 'src/global/commons.dto';
 import { REQUEST } from '@nestjs/core';
 import { UserRequest } from 'src/global/types';
+import { complaintNotFoundError } from 'src/global/errors/complaints.errors';
 
 @Injectable()
 export class ComplaintsService {
@@ -40,7 +41,7 @@ export class ComplaintsService {
       createdBy: this.request.user._id,
     });
     if (complaint == null) {
-      throw new NotFoundException('Complaint not found.');
+      throw new NotFoundException(complaintNotFoundError);
     }
     return complaint;
   }
@@ -112,7 +113,7 @@ export class ComplaintsService {
     });
 
     if (complaint == null) {
-      throw new ForbiddenException('Not authorized to delete.');
+      throw new ForbiddenException();
     }
     await this.complaintModel.deleteOne({ _id: id });
   }
@@ -122,7 +123,7 @@ export class ComplaintsService {
     const { status } = body;
     const complaint = await this.complaintModel.findById(id);
     if (!complaint) {
-      throw new NotFoundException('Complaint not found.');
+      throw new NotFoundException(complaintNotFoundError);
     }
 
     complaint.status = status;

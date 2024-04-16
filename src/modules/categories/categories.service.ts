@@ -4,7 +4,8 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Category } from './category.schema';
-import { IdDto, PaginationDto } from 'src/global/common.dto';
+import { IdDto, PaginationDto } from 'src/global/commons.dto';
+import { categoryNotFoundError } from 'src/global/errors/categories.errors';
 
 @Injectable()
 export class CategoriesService {
@@ -16,7 +17,7 @@ export class CategoriesService {
     const { id } = param;
     const category = await this.categoryModel.findById(id);
     if (!category) {
-      throw new NotFoundException('Category not found.');
+      throw new NotFoundException(categoryNotFoundError);
     }
     return category;
   }
