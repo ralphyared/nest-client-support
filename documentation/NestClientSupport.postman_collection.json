@@ -1,0 +1,729 @@
+{
+	"info": {
+		"_postman_id": "b14efcfd-2d3f-4d1d-8cb0-399a144bd076",
+		"name": "NestClientSupport",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27171963"
+	},
+	"item": [
+		{
+			"name": "Complaints",
+			"item": [
+				{
+					"name": "Submit Complaint",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"title\": \"boo\",\r\n  \"body\": \"string\",\r\n  \"status\": \"PENDING\",\r\n  \"categoryId\": \"661a4c270a5b2adfb68cef75\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/complaints",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User Complaints",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/complaints/list?limit=10&page=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"list"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User Complaint",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/complaints/661d76158dd0ef7d0baa2315",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"661d76158dd0ef7d0baa2315"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Complaint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/complaints/661d76158dd0ef7d0baa2315",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"661d76158dd0ef7d0baa2315"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Complaint Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"INPROGRESS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/complaints/status/661bb1ffc89da6edf1f49eb3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"status",
+								"661bb1ffc89da6edf1f49eb3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All User Complaints Filtered",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/complaints/all?page=1&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Complaints Grouped By Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/complaints/status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"complaints",
+								"status"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ralphyared@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"firstName\": \"Ralph\",\r\n    \"lastName\": \"Yared\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/signup",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"new@test.com\",\r\n    \"password\": \"1111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create CMS User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"employee\",\r\n  \"lastName\": \"employeer\",\r\n  \"email\": \"empl@app.com\",\r\n  \"password\": \"123456\",\r\n  \"role\":\"ADMIN\",\r\n    \"isVip\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/add-cms-user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"add-cms-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CMS Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@me.com\",\r\n    \"password\": \"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cms-login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cms-login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh JWT Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFhNzQ5YTUzMTg1ODU3ZThjYTJiNDciLCJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6InJhbHBoeWFyZWRAZ21haWwuY29tIiwiaXNWaXAiOmZhbHNlLCJpc0FkbWluIjp0cnVlLCJpc0VtcGxveWVlIjp0cnVlLCJpc0RlYWN0aXZhdGVkIjpmYWxzZSwiY3JlYXRlZEF0IjoiMjAyNC0wNC0xM1QxMjowMzozOC45NjRaIiwidXBkYXRlZEF0IjoiMjAyNC0wNC0xM1QxMjozNDo1MS44OTNaIiwiX192IjowLCJpYXQiOjE3MTMxMjE4NTAsImV4cCI6MTcxMzIwODI1MH0.e44pYNK8bODKDPTkF91hEn9yjUr1E1FRQT_mxLaCx0A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/refresh-token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"1010\",\r\n    \"newPassword\":\"1111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"ralphyared@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/forgot-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend OTP",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"verifToken\": \"8bVQUDdom&\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/forgot-password-resend",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"forgot-password-resend"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"verifToken\": \"8bVQUDdom&\",\r\n    \"enteredOtp\": 8169,\r\n    \"newPassword\": \"111111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/reset-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/deactivate/66192a65b889e1f15ae5835d",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"deactivate",
+								"66192a65b889e1f15ae5835d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Switch Admin Rights",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": \"66192a65b889e1f15ae5835d\",\r\n    \"role\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/admin",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get CMS Users Paginated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/cms?limit=10&page=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"cms"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/activate/66192a65b889e1f15ae5835d",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"activate",
+								"66192a65b889e1f15ae5835d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get CMS User Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/66192a65b889e1f15ae5835d",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"66192a65b889e1f15ae5835d"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"cat2\",\r\n    \"description\": \"description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/all?page=1&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"cat2\",\r\n    \"description\": \"deeios\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/categories/661a49b9343f4c3997f23578",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"661a49b9343f4c3997f23578"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/661a49b9343f4c3997f23578",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"661a49b9343f4c3997f23578"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Categories Paginated",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/all?page=1&limit=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
