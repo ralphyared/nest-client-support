@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
 import { Complaint } from './complaint.schema';
@@ -42,8 +47,7 @@ export class ComplaintsService {
       createdBy: userId,
     });
     if (complaint == null) {
-      const err = new Error('Complaints not found.');
-      throw err;
+      throw new NotFoundException('Complaint not found.');
     }
     return complaint;
   }
@@ -103,8 +107,7 @@ export class ComplaintsService {
     });
 
     if (complaint == null) {
-      const err = new Error('Not authorized to delete.');
-      throw err;
+      throw new ForbiddenException('Not authorized to delete.');
     }
     await this.complaintModel.deleteOne({ _id: id });
   }
@@ -114,8 +117,7 @@ export class ComplaintsService {
     const { status } = body;
     const complaint = await this.complaintModel.findById(id);
     if (!complaint) {
-      const err = new Error('Complaint not found.');
-      throw err;
+      throw new NotFoundException('Complaint not found.');
     }
 
     complaint.status = status;

@@ -1,4 +1,4 @@
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable, NotFoundException, Query } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Model } from 'mongoose';
@@ -16,8 +16,7 @@ export class CategoriesService {
     const { id } = param;
     const category = await this.categoryModel.findById(id);
     if (!category) {
-      const err = new Error('Category not found.');
-      throw err;
+      throw new NotFoundException('Category not found.');
     }
     return category;
   }

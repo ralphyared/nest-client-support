@@ -1,7 +1,9 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
@@ -14,6 +16,7 @@ import { RefreshToken } from './refresh-token.schema';
 import { Model } from 'mongoose';
 import { IdDto } from 'src/global/common.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { UserRole } from 'src/global/enums';
 
 @Injectable()
 export class AuthService {
@@ -29,8 +32,7 @@ export class AuthService {
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
-      const err = new Error('User already exists.');
-      throw err;
+      throw new ConflictException('User already exists.');
     }
 
     const hashedPw = await hash(password, 12);
@@ -49,17 +51,16 @@ export class AuthService {
 
     const user = await this.usersService.findOne(email);
     if (!user) {
-      throw new Error('User does not exist.');
+      throw new NotFoundException('User does not exist.');
     }
 
-    if (!(user.role === 'ADMIN' || user.role === 'EMPLOYEE')) {
+    if (user.role === UserRole.USER) {
       throw new ForbiddenException('User is not a CMS user.');
     }
 
     const isEqual = compareSync(password, user.password);
     if (!isEqual) {
-      const err = new Error('Wrong password.');
-      throw err;
+      throw new UnauthorizedException('Incorrect password.');
     }
 
     const userId = user._id;
@@ -74,14 +75,12 @@ export class AuthService {
 
     const user = await this.usersService.findOne(email);
     if (!user) {
-      const err = new Error('User does not exist.');
-      throw err;
+      throw new NotFoundException('User does not exist.');
     }
 
     const isEqual = compareSync(password, user.password);
     if (!isEqual) {
-      const err = new Error('Wrong password.');
-      throw err;
+      throw new UnauthorizedException('Incorrect password.');
     }
 
     const userId = user._id;
@@ -141,8 +140,7 @@ export class AuthService {
     const existingUser = await this.usersService.findOne(email);
 
     if (existingUser) {
-      const err = new Error('User already exists.');
-      throw err;
+      throw new ConflictException('User already exists.');
     }
 
     const hashedPw = await hash(password, 12);

@@ -1,4 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { SignupDto } from '../auth/dto/signup.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
@@ -122,14 +127,12 @@ export class UsersService {
     const userId = req.user._id;
     const user = await this.userModel.findById(userId);
     if (!user) {
-      const err = new Error('User not found.');
-      throw err;
+      throw new NotFoundException('User not found.');
     }
 
     const isEqual = compareSync(password, user.password!);
     if (!isEqual) {
-      const err = new Error('Wrong password.');
-      throw err;
+      throw new UnauthorizedException('Incorrect password.');
     }
     const newhashedPw = await hash(newPassword, 12);
     user.password = newhashedPw;
@@ -140,8 +143,7 @@ export class UsersService {
     const { email } = body;
     const user = await this.userModel.findOne({ email });
     if (!user) {
-      const err = new Error();
-      throw err;
+      return;
     }
     const otp = await this.otpService.createOtp(user._id);
     this.sendOtpByEmail(email, otp.otp);
