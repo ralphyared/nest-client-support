@@ -9,6 +9,7 @@ import {
   Req,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
@@ -22,6 +23,7 @@ import {
   PaginationDto,
 } from 'src/global/common.dto';
 import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
+import { CreateComplaintInterceptor } from './complaints.interceptor';
 
 @UseGuards(AuthorizationGuard)
 @Controller('complaints')
@@ -38,6 +40,7 @@ export class ComplaintsController {
   }
 
   @Post()
+  @UseInterceptors(CreateComplaintInterceptor)
   async submitComplaint(@Body() body: CreateComplaintDto) {
     return this.complaintsService.submitComplaint(body);
   }

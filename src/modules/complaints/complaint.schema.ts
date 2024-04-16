@@ -18,7 +18,7 @@ export class Complaint {
   status: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Category' }] })
-  categoryId: Category[];
+  categoryId: Types.ObjectId[];
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   createdBy: User;

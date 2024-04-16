@@ -9,9 +9,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthController } from './modules/auth/auth.controller';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { CategoriesController } from './modules/categories/categories.controller';
+import { Complaint, ComplaintSchema } from './modules/complaints/complaint.schema';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([
+      { name: Complaint.name, schema: ComplaintSchema },
+    ]),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.DB_URL),
     ComplaintsModule,

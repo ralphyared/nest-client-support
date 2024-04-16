@@ -27,24 +27,17 @@ export class ComplaintsService {
   ) {}
 
   async submitComplaint(body: CreateComplaintDto) {
-    const count = await this.complaintModel.countDocuments();
-    const numberedTitle = body.title + `#${count + 1}`;
-    const { title: _, ...rest } = body;
     const complaint = new this.complaintModel({
       ...body,
-      title: numberedTitle,
-      createdBy: this.request.user._id,
     });
     await complaint.save();
-    return complaint._id;
+    return { complaintId: complaint._id };
   }
 
   async getUserComplaint(param: IdDto) {
-    const userId = this.request.user._id;
-    const { id } = param;
     const complaint = await this.complaintModel.findOne({
-      _id: id,
-      createdBy: userId,
+      _id: param.id,
+      createdBy: this.request.user._id,
     });
     if (complaint == null) {
       throw new NotFoundException('Complaint not found.');
@@ -63,8 +56,20 @@ export class ComplaintsService {
       {
         $group: {
           _id: '$status',
-          complaints: { $push: '$$ROOT' },
-          count: { $sum: 1 },
+          complaints: {
+            $push: {
+              id: '$_id',
+              title: '$title',
+              body: '$body',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          status: '$_id',
+          _id: 0,
+          complaints: 1,
         },
       },
     ];

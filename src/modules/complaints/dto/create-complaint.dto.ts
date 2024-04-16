@@ -1,15 +1,10 @@
-import { IsEnum, IsMongoId, IsString } from 'class-validator';
-import { ComplaintStatus } from 'src/global/enums';
-
+import { IsMongoId, IsString } from 'class-validator';
 export class CreateComplaintDto {
   @IsString()
   title: string;
 
   @IsString()
   body: string;
-
-  @IsEnum(ComplaintStatus)
-  status: ComplaintStatus;
 
   @IsMongoId()
   categoryId: string;
