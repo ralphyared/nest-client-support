@@ -17,3 +17,4 @@ export class Otp {
 }
 
 export const OtpSchema = SchemaFactory.createForClass(Otp);
+OtpSchema.index({ verifToken: 1 });

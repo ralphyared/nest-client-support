@@ -202,7 +202,128 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Signup (To-Be Admin)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"123456\",\r\n    \"firstName\": \"Admin\",\r\n    \"lastName\": \"Admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/signup",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "946"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b2-bQC7YcK5830HRXvShj1UCcSQyEo\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:46:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJVU0VSIiwiaXNWaXAiOmZhbHNlLCJpc0RlYWN0aXZhdGVkIjpmYWxzZSwiX2lkIjoiNjYxZjhjNTcwMGRkZjFhYWMzYjBlNzMwIiwiY3JlYXRlZEF0IjoiMjAyNC0wNC0xN1QwODo0NjoxNS43ODJaIiwidXBkYXRlZEF0IjoiMjAyNC0wNC0xN1QwODo0NjoxNS43ODJaIiwiX192IjowLCJpYXQiOjE3MTMzNDM1NzUsImV4cCI6MTcxMzM0NDQ3NX0.HmWi5VDNAmWjuFCoHa1dCZGUpjrbFctsJLai5WE-h8o\",\n    \"userId\": \"661f8c5700ddf1aac3b0e730\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJVU0VSIiwiaXNWaXAiOmZhbHNlLCJpc0RlYWN0aXZhdGVkIjpmYWxzZSwiX2lkIjoiNjYxZjhjNTcwMGRkZjFhYWMzYjBlNzMwIiwiY3JlYXRlZEF0IjoiMjAyNC0wNC0xN1QwODo0NjoxNS43ODJaIiwidXBkYXRlZEF0IjoiMjAyNC0wNC0xN1QwODo0NjoxNS43ODJaIiwiX192IjowLCJpYXQiOjE3MTMzNDM1NzUsImV4cCI6MTcxMzQyOTk3NX0.BtnbX84l8MhOk-g264K61VfvFFrDyAvLG6WtdZYC1Y0\"\n}"
+						},
+						{
+							"name": "Signup (User)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"123456\",\r\n    \"firstName\": \"User\",\r\n    \"lastName\": \"User\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/signup",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"signup"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "936"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3a8-gn5YqYQjVfQkOo3qJvCYyhbC0ME\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:48:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJVc2VyIiwibGFzdE5hbWUiOiJVc2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpc1ZpcCI6ZmFsc2UsImlzRGVhY3RpdmF0ZWQiOmZhbHNlLCJfaWQiOiI2NjFmOGNlODAwZGRmMWFhYzNiMGU3MzYiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJfX3YiOjAsImlhdCI6MTcxMzM0MzcyMCwiZXhwIjoxNzEzMzQ0NjIwfQ.KWte562r1yfxjN36WekZK8dHI1qnEvWiRJaaeNLTBtg\",\n    \"userId\": \"661f8ce800ddf1aac3b0e736\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJVc2VyIiwibGFzdE5hbWUiOiJVc2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpc1ZpcCI6ZmFsc2UsImlzRGVhY3RpdmF0ZWQiOmZhbHNlLCJfaWQiOiI2NjFmOGNlODAwZGRmMWFhYzNiMGU3MzYiLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJfX3YiOjAsImlhdCI6MTcxMzM0MzcyMCwiZXhwIjoxNzEzNDMwMTIwfQ.oBsp4BdPc1vm-wSZ_y8KUGg66AfrCyHE2QZ3Q7fqknY\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Login",
@@ -228,7 +349,68 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "936"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3a8-16DBiiQwkp0cXv9euzm+9DrR4TA\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:49:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFmOGNlODAwZGRmMWFhYzNiMGU3MzYiLCJmaXJzdE5hbWUiOiJVc2VyIiwibGFzdE5hbWUiOiJVc2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpc1ZpcCI6ZmFsc2UsImlzRGVhY3RpdmF0ZWQiOmZhbHNlLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJfX3YiOjAsImlhdCI6MTcxMzM0Mzc0NiwiZXhwIjoxNzEzMzQ0NjQ2fQ.IJY1RFqzqYard1AgcKapowNfTDABItRP-NTvGWtnsps\",\n    \"userId\": \"661f8ce800ddf1aac3b0e736\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFmOGNlODAwZGRmMWFhYzNiMGU3MzYiLCJmaXJzdE5hbWUiOiJVc2VyIiwibGFzdE5hbWUiOiJVc2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwicm9sZSI6IlVTRVIiLCJpc1ZpcCI6ZmFsc2UsImlzRGVhY3RpdmF0ZWQiOmZhbHNlLCJjcmVhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJ1cGRhdGVkQXQiOiIyMDI0LTA0LTE3VDA4OjQ4OjQwLjEwMloiLCJfX3YiOjAsImlhdCI6MTcxMzM0Mzc0NiwiZXhwIjoxNzEzNDMwMTQ2fQ.jT_79tWw5Eou8V1_j3GnBbQR02lhrbqWWbQrVKZdTaA\"\n}"
+						}
+					]
 				},
 				{
 					"name": "Create CMS User",
@@ -254,7 +436,68 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create CMS User (Employee)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"firstName\": \"Employee\",\r\n  \"lastName\": \"Employee\",\r\n  \"email\": \"employee@employee.com\",\r\n  \"password\": \"123456\",\r\n  \"role\":\"EMPLOYEE\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/add-cms-user",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"add-cms-user"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "988"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3dc-KnvF3tfuAw0LL3IvHTA076LpEbo\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:51:24 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJFbXBsb3llZSIsImxhc3ROYW1lIjoiRW1wbG95ZWUiLCJlbWFpbCI6ImVtcGxveWVlQGVtcGxveWVlLmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImlzVmlwIjpmYWxzZSwiaXNEZWFjdGl2YXRlZCI6ZmFsc2UsIl9pZCI6IjY2MWY4ZDhjMDBkZGYxYWFjM2IwZTc0MyIsImNyZWF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NTE6MjQuNTg3WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NTE6MjQuNTg3WiIsIl9fdiI6MCwiaWF0IjoxNzEzMzQzODg0LCJleHAiOjE3MTMzNDQ3ODR9.Ex0M654RTVIHHdXBNmoUgfaIVi07o9WdgI1xXbSnlHM\",\n    \"userId\": \"661f8d8c00ddf1aac3b0e743\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJFbXBsb3llZSIsImxhc3ROYW1lIjoiRW1wbG95ZWUiLCJlbWFpbCI6ImVtcGxveWVlQGVtcGxveWVlLmNvbSIsInJvbGUiOiJFTVBMT1lFRSIsImlzVmlwIjpmYWxzZSwiaXNEZWFjdGl2YXRlZCI6ZmFsc2UsIl9pZCI6IjY2MWY4ZDhjMDBkZGYxYWFjM2IwZTc0MyIsImNyZWF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NTE6MjQuNTg3WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NTE6MjQuNTg3WiIsIl9fdiI6MCwiaWF0IjoxNzEzMzQzODg0LCJleHAiOjE3MTM0MzAyODR9.zNyYu9HORZXAxzlicpWwxixgvisJCFNA45PoO_CQkFY\"\n}"
+						}
+					]
 				},
 				{
 					"name": "CMS Login",
@@ -280,7 +523,128 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "CMS Login (Admin)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cms-login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cms-login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "948"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b4-VdkPvrFSI3dK6Qr61o/vj9H0sr4\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:52:26 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFmOGM1NzAwZGRmMWFhYzNiMGU3MzAiLCJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlzVmlwIjpmYWxzZSwiaXNEZWFjdGl2YXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsIl9fdiI6MCwiaWF0IjoxNzEzMzQzOTQ2LCJleHAiOjE3MTMzNDQ4NDZ9.b_MvoVP6eb852Nb_dU4qmphh3gVH73Fs21abiATN11U\",\n    \"userId\": \"661f8c5700ddf1aac3b0e730\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFmOGM1NzAwZGRmMWFhYzNiMGU3MzAiLCJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlzVmlwIjpmYWxzZSwiaXNEZWFjdGl2YXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsIl9fdiI6MCwiaWF0IjoxNzEzMzQzOTQ2LCJleHAiOjE3MTM0MzAzNDZ9.uwTGMwUKBQgsd73rc8xlLvu3sYPtl2V1RyoL9VHbL1A\"\n}"
+						},
+						{
+							"name": "CMS Login (User)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user@user.com\",\r\n    \"password\": \"123456\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cms-login",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cms-login"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "74"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4a-0sfveeMI8Yn4pe28rzeX9B2PFWM\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:52:52 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User is not a CMS user.\",\n    \"error\": \"Forbidden\",\n    \"statusCode\": 403\n}"
+						}
+					]
 				},
 				{
 					"name": "Refresh JWT Token",
@@ -289,7 +653,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFhNzQ5YTUzMTg1ODU3ZThjYTJiNDciLCJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6InJhbHBoeWFyZWRAZ21haWwuY29tIiwiaXNWaXAiOmZhbHNlLCJpc0FkbWluIjp0cnVlLCJpc0VtcGxveWVlIjp0cnVlLCJpc0RlYWN0aXZhdGVkIjpmYWxzZSwiY3JlYXRlZEF0IjoiMjAyNC0wNC0xM1QxMjowMzozOC45NjRaIiwidXBkYXRlZEF0IjoiMjAyNC0wNC0xM1QxMjozNDo1MS44OTNaIiwiX192IjowLCJpYXQiOjE3MTMxMjE4NTAsImV4cCI6MTcxMzIwODI1MH0.e44pYNK8bODKDPTkF91hEn9yjUr1E1FRQT_mxLaCx0A\"\r\n}",
+							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFmOGM1NzAwZGRmMWFhYzNiMGU3MzAiLCJmaXJzdE5hbWUiOiJBZG1pbiIsImxhc3ROYW1lIjoiQWRtaW4iLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlzVmlwIjpmYWxzZSwiaXNEZWFjdGl2YXRlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsInVwZGF0ZWRBdCI6IjIwMjQtMDQtMTdUMDg6NDY6MTUuNzgyWiIsIl9fdiI6MCwiaWF0IjoxNzEzMzQ0MDgxLCJleHAiOjE3MTM0MzA0ODF9.rbMfUJIcOervlY35lpMhwVW81jgWbA8Q1VnEQFu1Ai8\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -347,7 +711,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"ralphyared@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"user@user.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -570,7 +934,68 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Create Category",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"cat1\",\r\n    \"description\": \"description1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/categories",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "164"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"a4-ivafUI4TOTnD1d22cVnZCytydak\""
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 17 Apr 2024 08:58:20 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"title\": \"cat1\",\n    \"description\": \"description1\",\n    \"_id\": \"661f8f2c00ddf1aac3b0e76a\",\n    \"createdAt\": \"2024-04-17T08:58:20.331Z\",\n    \"updatedAt\": \"2024-04-17T08:58:20.331Z\",\n    \"__v\": 0\n}"
+						}
+					]
 				},
 				{
 					"name": "Get Category By Id",
