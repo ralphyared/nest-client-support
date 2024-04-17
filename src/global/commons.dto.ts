@@ -1,10 +1,6 @@
-import {
-  IsMongoId,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEnum, IsMongoId, IsNumberString, IsOptional } from 'class-validator';
 import { Types } from 'mongoose';
+import { ComplaintStatus } from './enums';
 
 export class PaginationDto {
   @IsNumberString()
@@ -16,11 +12,11 @@ export class PaginationDto {
 
 export class FilteredPaginationDto extends PaginationDto {
   @IsOptional()
-  @IsString()
-  userId: string;
+  @IsMongoId()
+  userId: Types.ObjectId;
 
   @IsOptional()
-  @IsString()
+  @IsEnum(ComplaintStatus)
   status: string;
 }
 

@@ -6,14 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
   Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
-import { Types } from 'mongoose';
 import { Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';

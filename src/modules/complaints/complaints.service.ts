@@ -16,8 +16,9 @@ import {
   PaginationDto,
 } from 'src/global/commons.dto';
 import { REQUEST } from '@nestjs/core';
-import { UserRequest } from 'src/global/types';
+import { ComplaintFilter, UserRequest } from 'src/global/types';
 import { complaintNotFoundError } from 'src/global/errors/complaints.errors';
+import config from 'src/global/config';
 
 @Injectable()
 export class ComplaintsService {
@@ -36,14 +37,10 @@ export class ComplaintsService {
   }
 
   async getUserComplaint(param: IdDto) {
-    const complaint = await this.complaintModel.findOne({
+    return this.complaintModel.findOne({
       _id: param.id,
       createdBy: this.request.user._id,
     });
-    if (complaint == null) {
-      throw new NotFoundException(complaintNotFoundError);
-    }
-    return complaint;
   }
 
   async getUserComplaintsGroupedStatus() {
@@ -95,27 +92,17 @@ export class ComplaintsService {
     };
   }
 
-  async countUserComplaints(userId?: any) {
+  async countUserComplaints(userId?: Types.ObjectId) {
     if (userId) {
       return this.complaintModel.countDocuments({
-        createdBy: userId as string,
+        createdBy: userId,
       });
     }
     return this.complaintModel.countDocuments();
   }
 
   async deleteUserComplaint(param: IdDto) {
-    const userId = this.request.user._id;
-    const { id } = param;
-    const complaint = await this.complaintModel.findOne({
-      _id: id,
-      createdBy: userId,
-    });
-
-    if (complaint == null) {
-      throw new ForbiddenException();
-    }
-    await this.complaintModel.deleteOne({ _id: id });
+    await this.complaintModel.deleteOne({ _id: param.id });
   }
 
   async updateComplaintStatus(param: IdDto, body: UpdateComplaintStatusDto) {
@@ -126,21 +113,23 @@ export class ComplaintsService {
       throw new NotFoundException(complaintNotFoundError);
     }
 
-    complaint.status = status;
-    const updatedComplaint = await complaint.save();
-    const userId = updatedComplaint.createdBy.toString();
+    await this.complaintModel.updateOne({ _id: id }, { $set: { status } });
 
-    this.socketService.emitEventToUser(userId, 'statusChanged', {
-      id,
-      status,
-    });
+    this.socketService.emitEventToUser(
+      String(complaint.createdBy),
+      config().socketConfig.events.statusChanged,
+      {
+        id,
+        status,
+      },
+    );
   }
 
   async getAllComplaintsFiltered(query: FilteredPaginationDto) {
     const { limit, page, status, userId } = query;
-    const filter: any = {};
-    if (userId) filter.createdBy = userId as string;
-    if (status) filter.status = (status as string).toUpperCase();
+    const filter: ComplaintFilter = {};
+    if (userId) filter.createdBy = userId;
+    if (status) filter.status = status;
 
     const complaintsList = await this.complaintModel
       .find(filter)

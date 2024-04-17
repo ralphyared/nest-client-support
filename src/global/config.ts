@@ -3,6 +3,13 @@ const getAuthConfig = () => ({
   saltRounds: 12
 });
 
+const getSocketConfig = () => ({
+  events: {
+    statusChanged: 'statusChanged'
+  }
+})
+
 export default () => ({
   authConfig: getAuthConfig(),
+  socketConfig : getSocketConfig()
 });
