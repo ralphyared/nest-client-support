@@ -1,10 +1,10 @@
 import { IsEnum, IsMongoId } from 'class-validator';
-import { Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import { UserRole } from 'src/global/enums';
 
 export class SetAdminRightsDto {
   @IsMongoId()
-  userId: Types.ObjectId;
+  userId: Schema.Types.ObjectId;
 
   @IsEnum(UserRole)
   role: UserRole;

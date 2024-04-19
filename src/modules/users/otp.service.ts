@@ -2,7 +2,7 @@ import { generate } from 'otp-generator';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Otp } from './otp.schema';
-import { Model, Types } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import { incorrectOtpError } from 'src/global/errors/users.errors';
 
 @Injectable()

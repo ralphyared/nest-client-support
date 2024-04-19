@@ -1,5 +1,5 @@
 import { IsEnum, IsMongoId, IsNumberString, IsOptional } from 'class-validator';
-import { Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 import { ComplaintStatus } from './enums';
 
 export class PaginationDto {
@@ -13,7 +13,7 @@ export class PaginationDto {
 export class FilteredPaginationDto extends PaginationDto {
   @IsOptional()
   @IsMongoId()
-  userId: Types.ObjectId;
+  userId: Schema.Types.ObjectId;
 
   @IsOptional()
   @IsEnum(ComplaintStatus)
@@ -22,5 +22,5 @@ export class FilteredPaginationDto extends PaginationDto {
 
 export class IdDto {
   @IsMongoId()
-  id: Types.ObjectId;
+  id: Schema.Types.ObjectId;
 }

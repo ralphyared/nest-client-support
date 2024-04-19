@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import * as mongoose from 'mongoose';
 
-export type OtpDocument = HydratedDocument<Otp>;
+export type OtpDocument = mongoose.HydratedDocument<Otp>;
 
 @Schema({ timestamps: true })
 export class Otp {
@@ -11,8 +11,8 @@ export class Otp {
   @Prop()
   verifToken: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'User' })
-  userId: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  userId: mongoose.Schema.Types.ObjectId;
 }
 
 export const OtpSchema = SchemaFactory.createForClass(Otp);

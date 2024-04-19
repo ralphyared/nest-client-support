@@ -1,7 +1,7 @@
-import { Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 interface User {
-  _id: Types.ObjectId;
+  _id: Schema.Types.ObjectId;
 }
 
 export class UserRequest extends Request {
@@ -9,6 +9,6 @@ export class UserRequest extends Request {
 }
 
 export interface ComplaintFilter {
-  createdBy?: Types.ObjectId;
+  createdBy?: Schema.Types.ObjectId;
   status?: string;
 }

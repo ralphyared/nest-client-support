@@ -1,14 +1,9 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
 import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
 import { Complaint } from './complaint.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import { SocketService } from '../socket/socket.service';
 import {
   FilteredPaginationDto,
@@ -18,6 +13,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { ComplaintFilter, UserRequest } from 'src/global/types';
 import { complaintNotFoundError } from 'src/global/errors/complaints.errors';
+import { ObjectId } from 'mongodb';
 import config from 'src/global/config';
 
 @Injectable()
@@ -39,37 +35,38 @@ export class ComplaintsService {
   async getUserComplaint(param: IdDto) {
     return this.complaintModel.findOne({
       _id: param.id,
-      createdBy: this.request.user._id,
+      createdBy: new ObjectId(this.request.user._id.toString()),
     });
   }
 
   async getUserComplaintsGroupedStatus() {
-    const userId = this.request.user._id;
+    const userId = new ObjectId(this.request.user._id.toString());
+    console.log(userId);
     const aggregation = [
       {
         $match: {
-          createdBy: `${userId}`,
+          createdBy: userId,
         },
       },
-      {
-        $group: {
-          _id: '$status',
-          complaints: {
-            $push: {
-              id: '$_id',
-              title: '$title',
-              body: '$body',
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          status: '$_id',
-          _id: 0,
-          complaints: 1,
-        },
-      },
+      // {
+      //   $group: {
+      //     _id: '$status',
+      //     complaints: {
+      //       $push: {
+      //         id: '$_id',
+      //         title: '$title',
+      //         body: '$body',
+      //       },
+      //     },
+      //   },
+      // },
+      // {
+      //   $project: {
+      //     status: '$_id',
+      //     _id: 0,
+      //     complaints: 1,
+      //   },
+      // },
     ];
 
     return this.complaintModel.aggregate(aggregation);
@@ -92,7 +89,7 @@ export class ComplaintsService {
     };
   }
 
-  async countUserComplaints(userId?: Types.ObjectId) {
+  async countUserComplaints(userId?: Schema.Types.ObjectId) {
     if (userId) {
       return this.complaintModel.countDocuments({
         createdBy: userId,
@@ -144,7 +141,7 @@ export class ComplaintsService {
     };
   }
 
-  async getComplaintById(complaintId: Types.ObjectId) {
+  async getComplaintById(complaintId: Schema.Types.ObjectId) {
     return this.complaintModel.findById(complaintId);
   }
 }
