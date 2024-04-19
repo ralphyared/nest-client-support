@@ -1,5 +1,5 @@
 const getAuthConfig = () => ({
-  jwtSecret: process.env.JWT_SECRET || '',
+  jwtSecret: process.env.JWT_SECRET || 'key',
   saltRounds: 12
 });
 

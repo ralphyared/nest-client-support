@@ -47,7 +47,7 @@ export class AuthenticationGuard implements CanActivate {
     const userId = { id: request.user._id };
     const user = await this.usersService.findOneById(userId);
 
-    if (user.isDeactivated === true) {
+    if (user.isDeactivated) {
       throw new UnauthorizedException('User is deactivated');
     }
 
