@@ -48,25 +48,25 @@ export class ComplaintsService {
           createdBy: userId,
         },
       },
-      // {
-      //   $group: {
-      //     _id: '$status',
-      //     complaints: {
-      //       $push: {
-      //         id: '$_id',
-      //         title: '$title',
-      //         body: '$body',
-      //       },
-      //     },
-      //   },
-      // },
-      // {
-      //   $project: {
-      //     status: '$_id',
-      //     _id: 0,
-      //     complaints: 1,
-      //   },
-      // },
+      {
+        $group: {
+          _id: '$status',
+          complaints: {
+            $push: {
+              id: '$_id',
+              title: '$title',
+              body: '$body',
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          status: '$_id',
+          _id: 0,
+          complaints: 1,
+        },
+      },
     ];
 
     return this.complaintModel.aggregate(aggregation);
