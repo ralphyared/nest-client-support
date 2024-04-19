@@ -32,7 +32,7 @@ export class AuthenticationGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Missing JWT');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
@@ -40,14 +40,15 @@ export class AuthenticationGuard implements CanActivate {
       });
 
       request['user'] = payload;
-      const userId = { id: request.user._id };
-      const user = await this.usersService.findOneById(userId);
-
-      if (user.isDeactivated === true) {
-        throw new UnauthorizedException(userDeactivatedError);
-      }
     } catch (err) {
-      throw err;
+      throw new UnauthorizedException('Invalid JWT');
+    }
+
+    const userId = { id: request.user._id };
+    const user = await this.usersService.findOneById(userId);
+
+    if (user.isDeactivated) {
+      throw new UnauthorizedException('User is deactivated');
     }
 
     return true;

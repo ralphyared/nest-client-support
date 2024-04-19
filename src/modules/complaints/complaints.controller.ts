@@ -6,13 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  Req,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ComplaintsService } from './complaints.service';
 import { CreateComplaintDto } from './dto/create-complaint.dto';
-import { Types } from 'mongoose';
 import { Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
 import { UserRole } from 'src/global/enums';
@@ -22,6 +21,7 @@ import {
   PaginationDto,
 } from 'src/global/commons.dto';
 import { UpdateComplaintStatusDto } from './dto/update-complaint-status.dto';
+import { CreateComplaintInterceptor } from './complaints.interceptor';
 
 @UseGuards(AuthorizationGuard)
 @Controller('complaints')
@@ -38,6 +38,7 @@ export class ComplaintsController {
   }
 
   @Post()
+  @UseInterceptors(CreateComplaintInterceptor)
   async submitComplaint(@Body() body: CreateComplaintDto) {
     return this.complaintsService.submitComplaint(body);
   }

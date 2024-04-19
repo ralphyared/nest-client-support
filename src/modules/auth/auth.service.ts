@@ -17,6 +17,9 @@ import { Model } from 'mongoose';
 import { IdDto } from 'src/global/commons.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { UserRole } from 'src/global/enums';
+import * as randomstring from 'randomstring';
+import { UserDocument } from '../users/user.schema';
+import config from '../../global/config';
 import {
   incorrectPasswordError,
   userExistsError,
@@ -33,6 +36,17 @@ export class AuthService {
     private refreshTokenModel: Model<RefreshToken>,
   ) {}
 
+  private async generateLoginResponse(user: UserDocument) {
+    const token = await this.signUserJwt(user);
+    const refreshToken = await this.generateRefreshToken(user);
+
+    return { token, userId: user._id, refreshToken };
+  }
+
+  private async hashPassword(password: string) {
+    return hash(password, config().authConfig.saltRounds);
+  }
+
   async signup(body: SignupDto) {
     const { email, password } = body;
     const existingUser = await this.usersService.findOne(email);
@@ -41,15 +55,11 @@ export class AuthService {
       throw new ConflictException(userExistsError);
     }
 
-    const hashedPw = await hash(password, 12);
+    const hashedPw = await this.hashPassword(password);
 
     const savedUser = await this.usersService.create(body, hashedPw);
-    const userId = savedUser._id;
 
-    const token = await this.signUserJwt(savedUser);
-    const refreshToken = await this.generateRefreshToken(savedUser);
-
-    return { token, userId, refreshToken };
+    return this.generateLoginResponse(savedUser);
   }
 
   async cmsLogin(body: LoginDto) {
@@ -89,22 +99,14 @@ export class AuthService {
       throw new UnauthorizedException(incorrectPasswordError);
     }
 
-    const userId = user._id;
-    const token = await this.signUserJwt(user);
-    const refreshToken = await this.generateRefreshToken(user);
-
-    return { token, userId, refreshToken };
+    return this.generateLoginResponse(user);
   }
 
   async generateRefreshToken(user: any) {
-    const userObj = { ...user }._doc;
-    delete userObj.password;
-
-    const refreshToken = await this.jwtService.signAsync(userObj, {
-      secret: `${process.env.JWT_REFRESH_SECRET}`,
-      expiresIn: 86400,
+    const refreshToken = randomstring.generate({
+      length: 20,
+      charset: 'alphanumeric',
     });
-    refreshToken.replace(/\r?\n|\r/g, '');
 
     const newToken = new this.refreshTokenModel({
       refreshToken,
@@ -117,25 +119,30 @@ export class AuthService {
 
   async refreshJwtToken(body: RefreshTokenDto) {
     const { refreshToken } = body;
-    const refreshDoc = await this.refreshTokenModel.findOne({ refreshToken });
+    const refreshDoc = await this.refreshTokenModel.findOneAndDelete({
+      refreshToken,
+    });
     if (!refreshDoc) throw new NotFoundException();
 
     const id: IdDto = { id: refreshDoc.userId };
     const user = await this.usersService.findOneById(id);
 
-    const userId = user._id;
-    const token = await this.signUserJwt(user);
-    return { token, userId, refreshToken };
+    return this.generateLoginResponse(user);
   }
 
-  async signUserJwt(user: any) {
-    const userObj = { ...user }._doc;
-    delete userObj.password;
-
-    const token = await this.jwtService.signAsync(userObj, {
-      secret: `${process.env.JWT_SECRET}`,
-      expiresIn: 900,
-    });
+  async signUserJwt(user: UserDocument) {
+    const token = await this.jwtService.signAsync(
+      {
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      {
+        secret: config().authConfig.jwtSecret,
+        expiresIn: 900,
+      },
+    );
     token.replace(/\r?\n|\r/g, '');
 
     return token;
@@ -149,14 +156,10 @@ export class AuthService {
       throw new ConflictException(userExistsError);
     }
 
-    const hashedPw = await hash(password, 12);
+    const hashedPw = await this.hashPassword(password);
 
     const savedUser = await this.usersService.createCms(body, hashedPw);
-    const userId = savedUser._id;
 
-    const token = await this.signUserJwt(savedUser);
-    const refreshToken = await this.generateRefreshToken(savedUser);
-
-    return { token, userId, refreshToken };
+    return { userId: savedUser._id };
   }
 }

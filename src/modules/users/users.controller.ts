@@ -13,7 +13,6 @@ import { UsersService } from './users.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { Public, Roles } from 'src/global/custom-decorators';
 import { AuthorizationGuard } from '../auth/authorization.guard';
-import { Types } from 'mongoose';
 import { UserRole } from 'src/global/enums';
 import { IdDto, PaginationDto } from 'src/global/commons.dto';
 import { SetAdminRightsDto } from './dto/set-admin-rights.dto';

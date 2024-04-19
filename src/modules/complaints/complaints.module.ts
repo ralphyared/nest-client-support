@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Complaint, ComplaintSchema } from './complaint.schema';
 import { SocketModule } from '../socket/socket.module';
 import { AuthModule } from '../auth/auth.module';
+import { CreateComplaintInterceptor } from './complaints.interceptor';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { AuthModule } from '../auth/auth.module';
     AuthModule,
   ],
   controllers: [ComplaintsController],
-  providers: [ComplaintsService],
+  providers: [ComplaintsService, CreateComplaintInterceptor],
   exports: [ComplaintsService],
 })
 export class ComplaintsModule {}

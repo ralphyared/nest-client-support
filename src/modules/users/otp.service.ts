@@ -44,10 +44,9 @@ export class OtpService {
 
   async verifyOtp(verifToken: string, enteredOtp: number) {
     const otp = await this.otpModel.findOne({ verifToken });
-    if (!(enteredOtp === otp.otp)) {
+    if (enteredOtp !== otp.otp) {
       throw new UnauthorizedException(incorrectOtpError);
     }
-    return;
   }
 
   async getUserIdFromOtp(verifToken: string) {

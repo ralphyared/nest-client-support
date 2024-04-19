@@ -17,16 +17,16 @@ export class AuthorizationGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const roles = this.reflector.get('roles', context.getHandler());
+    const requiredRoles = this.reflector.get('roles', context.getHandler());
 
-    if (!roles) {
+    if (!requiredRoles) {
       return true;
     }
 
     const userId = { id: this.request.user._id };
     const user = await this.usersService.findOneById(userId);
 
-    const isAuthorized = roles.includes(user.role);
+    const isAuthorized = requiredRoles.includes(user.role);
 
     return !!isAuthorized;
   }
