@@ -41,7 +41,6 @@ export class ComplaintsService {
 
   async getUserComplaintsGroupedStatus() {
     const userId = new ObjectId(this.request.user._id.toString());
-    console.log(userId);
     const aggregation = [
       {
         $match: {
